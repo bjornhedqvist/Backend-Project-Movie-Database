@@ -1,7 +1,7 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable("reviews", (table) => {
-        table.increments("review_id").primary(); // Sets movie_id as the primary key
+        table.increments("review_id").primary(); // Sets review_id as the primary key
         table.string("content");
         table.integer("score")
         table.foreign("critic_id");
