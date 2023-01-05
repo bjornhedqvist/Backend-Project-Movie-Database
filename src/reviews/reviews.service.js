@@ -1,52 +1,41 @@
 const knex = require("../db/connection");
-const mapProperties = require("../utils/map-properties");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const reduceProperties = require("../utils/reduce-properties");
 
-async function list() {
-  return knex("movies").select("*");
-}
-
-async function listShowing() {
-  return knex("movies as m")
-    .join("movies_theaters as mt", "m.movie_id", "mt.movie_id")
-    .select("m.*")
-    .where("mt.is_showing", true)
-    .groupBy("m.movie_id", "mt.is_showing");
-}
-
-async function read(movieId){
-    return knex("movies")
+async function read(reviewId){
+    return knex("reviews")
         .select("*")
-        .where({ movie_id: movieId })
+        .where({ review_id: reviewId })
         .first()
 }
 
-async function theatersPlaying(movieId){
-    return knex("movies_theaters as mt")
-        .join("theaters as t", "t.theater_id", "mt.theater_id" )
-        .select("*")
-        .where({ movie_id: movieId })
-        .andWhere("mt.is_showing", true)
-        .groupBy("t.theater_id")
-}
-
-const addCritic = mapProperties({
-        preferred_name: "critic.preferred_name",
-        surname: "critic.surname",
-        organization_name: "critic.organization_name"
+const addCritic = reduceProperties("critic_id", {
+        preferred_name: ["critic", "preferred_name"],
+        surname: ["critic", "surname"],
+        organization_name: ["critic", "organization_name"]
 })
 
-async function criticsReviews(movieId){
+async function update(updateBody){
     return knex("reviews as r")
         .join("critics as c", "c.critic_id", "r.critic_id")
         .select("*")
-        .where({"r.movie_id": movieId})
-        .then((data)=> data.map((i)=> addCritic(i)))
+        .where({"r.review_id": updateBody.review_id})
+        .update(updateBody, "*")
+        .then((updatedRecords) => updatedRecords[0])
+        
+}
+
+async function reduceWithCritic(review_id){
+  return knex("reviews as r")
+    .join("critics as c", "c.critic_id", "r.critic_id")
+    .select("*")
+    .where({review_id})
+    .then(addCritic)
+    .then((updatedRecords) => updatedRecords[0])
 }
 
 module.exports = {
-  list,
-  listShowing,
   read,
-  theatersPlaying,
-  criticsReviews,
+  update,
+  reduceWithCritic
 };

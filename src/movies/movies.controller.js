@@ -1,6 +1,5 @@
 const service = require("./movies.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-const mapProperties = require("../utils/map-properties")
 
 async function list(req, res) {
   let data = await service.list();
@@ -35,18 +34,10 @@ async function theatersPlaying(req, res){
     res.json({ data })
 }
 
-// async function criticsReviews(req, res){
-//     const {movie} = res.locals
-//     const data = await service.criticsReviews(movie.movie_id)
-//     console.log(data)
-//     res.json({ data })
-// }
-
 async function criticsReviews(req, res){
     const data = await service.criticsReviews(res.locals.movie.movie_id)
 
     res.json({data})
-    console.log(data)
 }
 
 module.exports = {
