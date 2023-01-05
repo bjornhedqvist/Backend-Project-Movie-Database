@@ -11,4 +11,8 @@ router.route("/:movieId")
     .all(cors())
     .get(controller.read)
 
+router.route("/:movieId/theaters")
+    .all(cors())
+    .get(controller.theatersPlaying)
+
 module.exports = router;

@@ -19,8 +19,18 @@ async function read(movieId){
         .first()
 }
 
+async function theatersPlaying(movieId){
+    return knex("movies_theaters as mt")
+        .join("theaters as t", "t.theater_id", "mt.theater_id" )
+        .select("*")
+        .where({ movie_id: movieId })
+        .andWhere("mt.is_showing", true)
+        .groupBy("t.theater_id")
+}
+
 module.exports = {
   list,
   listShowing,
   read,
+  theatersPlaying,
 };
