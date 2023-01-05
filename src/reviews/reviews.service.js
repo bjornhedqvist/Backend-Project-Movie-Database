@@ -34,8 +34,15 @@ async function reduceWithCritic(review_id){
     .then((updatedRecords) => updatedRecords[0])
 }
 
+async function destroy(review_id){
+  return knex("reviews")
+    .where({review_id})
+    .del()
+}
+
 module.exports = {
   read,
   update,
-  reduceWithCritic
+  reduceWithCritic,
+  delete: destroy
 };

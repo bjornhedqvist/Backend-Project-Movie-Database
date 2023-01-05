@@ -6,5 +6,6 @@ const cors = require("cors");
 router.route("/:reviewId")
     .all(cors())
     .put(controller.update)
+    .delete(controller.delete)
 
 module.exports = router;
