@@ -29,20 +29,26 @@ async function read(req, res) {
   res.json({ data });
 }
 
-async function theatersPlaying(req, res){
-    const data = await service.theatersPlaying(res.locals.movie.movie_id)
-    res.json({ data })
+async function theatersPlaying(req, res) {
+  const data = await service.theatersPlaying(res.locals.movie.movie_id);
+  res.json({ data });
 }
 
-async function criticsReviews(req, res){
-    const data = await service.criticsReviews(res.locals.movie.movie_id)
+async function criticsReviews(req, res) {
+  const data = await service.criticsReviews(res.locals.movie.movie_id);
 
-    res.json({data})
+  res.json({ data });
 }
 
 module.exports = {
   list: asyncErrorBoundary(list),
   read: [asyncErrorBoundary(movieExists), asyncErrorBoundary(read)],
-  theatersPlaying: [asyncErrorBoundary(movieExists), asyncErrorBoundary(theatersPlaying)],
-  criticsReviews: [asyncErrorBoundary(movieExists), asyncErrorBoundary(criticsReviews) ]
+  theatersPlaying: [
+    asyncErrorBoundary(movieExists),
+    asyncErrorBoundary(theatersPlaying),
+  ],
+  criticsReviews: [
+    asyncErrorBoundary(movieExists),
+    asyncErrorBoundary(criticsReviews),
+  ],
 };
