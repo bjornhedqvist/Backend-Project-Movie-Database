@@ -1,5 +1,4 @@
 const knex = require("../db/connection");
-const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const reduceProperties = require("../utils/reduce-properties");
 
 async function read(reviewId){
